@@ -13,9 +13,9 @@ class NNaNUnit(nn.Module):
         assert(len(dims)>0)
         pad_dims = [1] + dims + [1]
         for idx, dim in enumerate(pad_dims[:-1]):
-            self.add_module(str(idx), nn.Linear(dim, pad_dims[idx + 1]))
+            self.add_module('Linear'+str(idx), nn.Linear(dim, pad_dims[idx + 1]))
             if idx  < len(dims):
-                self.add_module(nn.ReLU(True))
+                self.add_module('ReLU'+str(idx), nn.ReLU(True))
 
     def forward(self, inputs):
         # reshape to a vector and compute
@@ -28,4 +28,4 @@ class NNaNUnit(nn.Module):
 
 
 def nnan_unit(**kwargs):
-    return NNaNUnit()
+    return NNaNUnit(**kwargs)

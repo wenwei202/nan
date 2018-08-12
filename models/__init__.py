@@ -1,3 +1,4 @@
+from .nnan import *
 from .alexnet import *
 from .alexnetv2 import *
 from .resnet import *
