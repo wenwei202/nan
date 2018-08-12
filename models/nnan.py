@@ -1,15 +1,15 @@
 import torch
 import torch.nn as nn
-__all__ = ['nan_unit']
+__all__ = ['nnan_unit']
 
 
-class NaNUnit(nn.Module):
+class NNaNUnit(nn.Module):
     """
     Args:
         dims: the list of numbers of neurons
     """
     def __init__(self, dims):
-        super(NaNUnit, self).__init__()
+        super(NNaNUnit, self).__init__()
         assert(len(dims)>0)
         pad_dims = [1] + dims + [1]
         for idx, dim in enumerate(pad_dims[:-1]):
@@ -27,5 +27,5 @@ class NaNUnit(nn.Module):
         return outputs.view(orig_shape)
 
 
-def nan_unit(**kwargs):
-    return NaNUnit()
+def nnan_unit(**kwargs):
+    return NNaNUnit()
