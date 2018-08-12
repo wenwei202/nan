@@ -31,11 +31,11 @@ model_names = sorted(name for name in models.__dict__
 
 parser = argparse.ArgumentParser(description='PyTorch NNaNUnit test')
 
-parser.add_argument('--dims', default='50,50',
+parser.add_argument('--dims', default='10,10,10',
                     help='sizes of hidden neurons - e.g. 5,8,10')
 parser.add_argument('--nonlinear', default='relu',
                     help='the nonlinear function to approximate - e.g. tanh ')
-parser.add_argument('--range', default='-10,10',
+parser.add_argument('--range', default='-20,20',
                     help='the domain to approximate')
 parser.add_argument('--batch-size', type=int, default=100,
                     help='batch size')
@@ -100,11 +100,12 @@ def main():
     for num_iter in range(args.iterations):
         if num_iter % 500 == 0:
             optimizer = torch.optim.SGD(model.parameters(),
+                                        weight_decay=0.0005,
                                         lr=adjust_lr(num_iter, args.iterations, args.lr))
         optimizer.zero_grad()
         # generate a random batch
-        inputs = torch.rand(args.batch_size, 1) * (args.range[1] - args.range[0]) + args.range[0]
-        targets = func(torch.from_numpy(inputs.numpy()))
+        inputs = torch.rand(args.batch_size, 2, 3) * (args.range[1] - args.range[0]) + args.range[0]
+        targets = func(inputs)
         targets = targets.cuda(async=True)
         input_var = Variable(inputs.type(args.type), volatile=False)
         target_var = Variable(targets)
@@ -128,8 +129,6 @@ def main():
     plt.legend()
     plt.title('Comparison')
     plt.show()
-
-
 
 
 if __name__ == '__main__':
