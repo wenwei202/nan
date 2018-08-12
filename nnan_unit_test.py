@@ -132,4 +132,7 @@ def main():
 
 
 if __name__ == '__main__':
+    """
+    python nnan_unit_test.py --dims=10,10,10 --lr=0.01 --range=-20,20 --nonlinear=asqrt
+    """
     main()
