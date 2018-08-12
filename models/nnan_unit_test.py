@@ -21,6 +21,7 @@ from torch.nn.utils import clip_grad_norm
 from math import ceil
 import numpy as np
 import sys
+import matplotlib.pyplot as plt
 
 current_module = sys.modules[__name__]
 
@@ -114,6 +115,20 @@ def main():
 
         if num_iter % 100 == 0:
             print('loss: {}'.format(loss.data[0]))
+
+    # plot the learned function
+    xs = np.linspace(2*args.range[0], 2*args.range[1], 1000)
+    ts = func(xs)
+    input_var = torch.from_numpy(xs)
+    input_var = Variable(input_var.type(args.type), volatile=True)
+    output = model(input_var)
+    ys = output.data.cpu().numpy()
+    plt.plot(xs, ts, 'b-', label='expected')
+    plt.plot(xs, ys, 'r--', label='learned')
+    plt.legend()
+    plt.title('Comparison')
+    plt.show()
+
 
 
 
