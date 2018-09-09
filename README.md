@@ -1,4 +1,4 @@
-# nan
+# nnan
 
 
 ## Usage
@@ -10,11 +10,11 @@ python evaluate.py --model alexnet --dataset imagenet -b 100 --gpus 1 --evaluate
 ```
 
 ## Dependencies
-
-- [pytorch](<http://www.pytorch.org>)
-- [torchvision](<https://github.com/pytorch/vision>) to load the datasets, perform image transforms
-- [pandas](<http://pandas.pydata.org/>) for logging to csv
-- [bokeh](<http://bokeh.pydata.org>) for training visualization `conda install bokeh=0.12.0`
+- python 2.7 [Anaconda]
+- [pytorch](<http://www.pytorch.org>) ['0.4.1.post2']
+- [torchvision](<https://github.com/pytorch/vision>) ['0.2.1'] to load the datasets, perform image transforms
+- [pandas](<http://pandas.pydata.org/>) ['0.22.0'] for logging to csv
+- [bokeh](<http://bokeh.pydata.org>) [0.12.0] for training visualization `conda install bokeh=0.12.0`
 
 
 ## Data
