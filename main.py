@@ -62,7 +62,7 @@ parser.add_argument('--lr_bb_fix', dest='lr_bb_fix', action='store_true',
                     help='learning rate fix for big batch lr =  lr0*(batch_size*batch_multiplier/128)**0.5')
 parser.add_argument('--no-lr_bb_fix', dest='lr_bb_fix', action='store_false',
                     help='learning rate fix for big batch lr =  lr0*(batch_size*batch_multiplier/128)**0.5')
-parser.set_defaults(lr_bb_fix=True)
+parser.set_defaults(lr_bb_fix=False)
 parser.add_argument('--save_all', dest='save_all', action='store_true',
                     help='save all better checkpoints')
 parser.add_argument('--no-save_all', dest='save_all', action='store_false',
