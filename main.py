@@ -19,7 +19,9 @@ from utils import *
 from ast import literal_eval
 from torch.nn.utils import clip_grad_norm
 from math import ceil
+from models.resnet import set_nonlinear
 import numpy as np
+import functools
 
 model_names = sorted(name for name in models.__dict__
                      if name.islower() and not name.startswith("__")
@@ -104,12 +106,24 @@ parser.add_argument('-e', '--evaluate', type=str, metavar='FILE',
                     help='evaluate model FILE on validation set')
 parser.add_argument('--batch-multiplier', '-bm', default=1, type=int,
                     metavar='BM', help='The number of batchs to delay parameter updating (default: 1). Used for very large-batch training using limited memory')
+parser.add_argument('--dims', default=None,
+                    help='sizes of hidden neurons - e.g. 5,8,10')
+parser.add_argument('--depth', default=44, type=int,
+                    metavar='N', help='depth of resent (default: 44)')
 
 def main():
     #torch.manual_seed(123)
     global args, best_prec1
     best_prec1 = 0
     args = parser.parse_args()
+    if args.dims:
+        args.dims = [int(i) for i in args.dims.split(',')]
+
+        class _NonLinear(models.nnan.NNaNUnit):
+            def __init__(self, **kwds):
+                super(_NonLinear, self).__init__(dims=args.dims, **kwds)
+
+        set_nonlinear(_NonLinear)
     if args.regime_bb_fix:
             args.epochs *= (int)(ceil(args.batch_size*args.batch_multiplier / args.mini_batch_size))
 
@@ -141,7 +155,7 @@ def main():
     # create model
     logging.info("creating model %s", args.model)
     model = models.__dict__[args.model]
-    model_config = {'input_size': args.input_size, 'dataset': args.dataset}
+    model_config = {'input_size': args.input_size, 'dataset': args.dataset, 'depth': args.depth}
 
     if args.model_config is not '':
         model_config = dict(model_config, **literal_eval(args.model_config))

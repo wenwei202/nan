@@ -211,18 +211,19 @@ def resnet(**kwargs):
         if depth == 18:
             return ResNet_imagenet(num_classes=num_classes,
                                    block=BasicBlock, layers=[2, 2, 2, 2])
-        if depth == 34:
+        elif depth == 34:
             return ResNet_imagenet(num_classes=num_classes,
                                    block=BasicBlock, layers=[3, 4, 6, 3])
-        if depth == 50:
+        elif depth == 50:
             return ResNet_imagenet(num_classes=num_classes,
                                    block=Bottleneck, layers=[3, 4, 6, 3])
-        if depth == 101:
+        elif depth == 101:
             return ResNet_imagenet(num_classes=num_classes,
                                    block=Bottleneck, layers=[3, 4, 23, 3])
-        if depth == 152:
+        elif depth == 152:
             return ResNet_imagenet(num_classes=num_classes,
                                    block=Bottleneck, layers=[3, 8, 36, 3])
+        else: raise ValueError("unsupported depth in ResNet_imagenet")
 
     elif dataset == 'cifar10':
         num_classes = num_classes or 10
