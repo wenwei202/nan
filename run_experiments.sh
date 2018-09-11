@@ -5,5 +5,5 @@ python main.py  --dataset cifar10 \
                 --mini-batch-size 128 \
                 --lr 0.1 \
                 --dims 10 \
-                --depth 44 \
+                --depth 20 \
                 --gpus 0 
