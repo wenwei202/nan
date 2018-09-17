@@ -1,6 +1,6 @@
 import pdb
 import argparse
-import os
+import re
 import time
 import logging
 from random import uniform
@@ -86,6 +86,8 @@ parser.add_argument('--momentum', default=0.9, type=float, metavar='M',
                     help='momentum')
 parser.add_argument('--weight-decay', '--wd', default=None, type=float,
                     metavar='W', help='weight decay (default: None)')
+parser.add_argument('--nnan-decay', '--nd', default=0.0005, type=float,
+                    metavar='W', help='nnan decay (default: 5e-4)')
 parser.add_argument('--dropout', default=None, type=float,
                     metavar='DROPOUT', help='dropout ratio (default: None)')
 parser.add_argument('--sharpness-smoothing', '--ss', default=0.0, type=float,
@@ -110,6 +112,19 @@ parser.add_argument('--dims', default=None,
                     help='sizes of hidden neurons - e.g. 5,8,10')
 parser.add_argument('--depth', default=44, type=int,
                     metavar='N', help='depth of resent (default: 44)')
+
+
+def _nnan_decay_loss(m, weight_decay, nnan_decay):
+    relu_decay_loss = 0.
+    for key, p in m.named_parameters():
+        if re.match(".*NNaN_Linear.*((weight)|(bias)).*", key):
+            l2_norm = torch.norm(p)
+            nnan_norm = torch.norm(p - m.state_dict()["NNaN_init_param/"+key.replace('.', '/')])
+            relu_decay_loss = \
+                relu_decay_loss + \
+                nnan_decay * nnan_norm * nnan_norm / 2.0 - \
+                weight_decay * l2_norm * l2_norm / 2.0
+    return relu_decay_loss
 
 def main():
     #torch.manual_seed(123)
@@ -416,6 +431,11 @@ def forward(data_loader, model, criterion, epoch=0, training=True, optimizer=Non
                 mini_target_var = mini_targets[k]
                 output = model(mini_input_var)
                 loss = criterion(output, mini_target_var)
+
+                # add nnan regularization
+                if args.nnan_decay > 1.0e-8:
+                    nnan_loss = _nnan_decay_loss(model, optimizer.param_groups[0]['weight_decay'], args.nnan_decay)
+                    loss = loss + nnan_loss
 
                 prec1, prec5 = accuracy(output.data, mini_target_var.data, topk=(1, 5))
                 losses.update(loss.data[0], mini_input_var.size(0))

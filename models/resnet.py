@@ -1,6 +1,8 @@
 import torch.nn as nn
 import torchvision.transforms as transforms
 import math
+import re
+import torch
 
 __all__ = ['resnet']
 
@@ -24,6 +26,16 @@ def init_model(model):
         elif isinstance(m, nn.BatchNorm2d):
             m.weight.data.fill_(1)
             m.bias.data.zero_()
+    for key, p in model.named_parameters():
+        if re.match(".*NNaN_Linear.*weight.*", key):
+            mean_val = 1.0/p.data.size()[1]
+            p.data.normal_(mean_val, mean_val/4.)
+            reg_buf = torch.ones_like(p.data)*mean_val
+            model.register_buffer("NNaN_init_param/" + key.replace('.', '/'), reg_buf)
+        if re.match(".*NNaN_Linear.*bias.*", key):
+            p.data.zero_()
+            reg_buf = torch.zeros(p.data.size())
+            model.register_buffer("NNaN_init_param/" + key.replace('.', '/'), reg_buf)
 
 
 class BasicBlock(nn.Module):
