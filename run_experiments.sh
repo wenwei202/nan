@@ -3,7 +3,7 @@ python main.py  --dataset cifar10 \
                 --epochs 200 \
                 --batch-size 128 \
                 --mini-batch-size 128 \
-                --lr 0.1 \
-                --dims 10 \
+                --nnan-decay 0.0005 \
                 --depth 20 \
-                --gpus 0 
+                --dims 10 \
+                --gpus 0
