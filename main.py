@@ -54,7 +54,7 @@ parser.add_argument('--epochs', default=200, type=int, metavar='N',
                     help='number of total epochs to run')
 parser.add_argument('--start-epoch', default=0, type=int, metavar='N',
                     help='manual epoch number (useful on restarts)')
-parser.add_argument('-b', '--batch-size', default=2048, type=int,
+parser.add_argument('-b', '--batch-size', default=128, type=int,
                     metavar='N', help='mini-batch size (default: 2048)')
 parser.add_argument('-mb', '--mini-batch-size', default=128, type=int,
                     help='mini-mini-batch size (default: 128)')
@@ -80,7 +80,7 @@ parser.add_argument('--no-regime_bb_fix', dest='regime_bb_fix', action='store_fa
 parser.set_defaults(regime_bb_fix=False)
 parser.add_argument('--optimizer', default='SGD', type=str, metavar='OPT',
                     help='optimizer function used')
-parser.add_argument('--lr', '--learning_rate', default=0.001, type=float,
+parser.add_argument('--lr', '--learning_rate', default=0.1, type=float,
                     metavar='LR', help='initial learning rate')
 parser.add_argument('--momentum', default=0.9, type=float, metavar='M',
                     help='momentum')
